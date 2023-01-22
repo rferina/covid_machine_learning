@@ -8,6 +8,7 @@ We developed a binary classification machine learning model to identify if a ant
 ## Annotated Bibliography
 
 **Software Papers:**
+
 1. W. L. Hamilton, R. Ying, J. Leskovec, Inductive Representation Learning on Large Graphs (2018), (available at http://arxiv.org/abs/1706.02216).
 	GraphSAGE is one of the machine learning architectures that will be explored in our project. This conference paper is by the GraphSAGE authors and provides background information on the framework, as well as extensive details on the algorithm they created. This will be a useful resource to reference when curating interaction data for this type of machine learning architecture. This paper was chosen as it references one of the machine learning architectures/softwares our mentors suggested we research, and its high number of citations at 1408 with 41 references.
 
@@ -15,6 +16,7 @@ We developed a binary classification machine learning model to identify if a ant
     This paper discusses PyTorch, an architecture of the machine learning library, and its utilization as a deep learning framework. This paper introduces a useful resource that is both easy to use and extremely fast. Specifically, PyTorch is able to do complex computations while matching the performance of the fastest deep learning libraries. This paper was chosen as it is highly cited at 4,657 total citations and 43 cited references, and also contains information about PyTorch, which our mentors told us to research.
 
 **LANL-Chosen Papers:**
+
 3. S. Gelman, S. A. Fahlberg, P. Heinzelman, P. A. Romero, A. Gitter, Neural networks to learn protein sequence–function relationships from deep mutational scanning data. Proceedings of the National Academy of Sciences. 118, e2104878118 (2021).
 	In this paper, multiple neural network architectures are tested to investigate how a network’s internal representation affects its ability to learn protein sequence-function mapping. The authors presented a supervised learning framework capable of inferring this type of mapping from deep mutational scanning data. The background information on neural network architecture will be helpful for understanding how machine learning can be applied to understanding antibody and antigen interactions. This paper may have less relative importance, as it has only 8 citations and 66 references, however, it was published very recently. 
 
@@ -25,6 +27,7 @@ We developed a binary classification machine learning model to identify if a ant
     This paper discusses how machine learning algorithms can predict viral escape patterns using sequence data and language models from three proteins: influenza hemagglutinin, HIV-1 envelope glycoprotein, and severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2). This paper will be useful because it provides good background information and application practices for machine learning in antibody/antigen research. Considering the paper was published in the last year, it has high relative importance with 51 citations and 49 references.
 
 **Additional Papers:**
+
 6. D. M. Fowler, S. Fields, Deep mutational scanning: a new style of protein science. Nat Methods. 11, 801–807 (2014).
 	This method's paper provided an overview of deep mutational scanning, which utilizes high-throughput DNA sequencing to assess functional capacity of many protein variants simultaneously. Data generated from this method have been used to successfully train neural networks to learn sequence-function relationships in proteins. The methods described in this paper can be useful for understanding how sequence data can be used to inform machine learning for protein-protein interactions. This paper was selected as it has a high number of citations (456 citations, 52 references), indicating its importance to the field.
 
