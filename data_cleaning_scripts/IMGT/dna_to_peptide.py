@@ -1,13 +1,10 @@
 #!/usr/bin/env python3.10
-
+' This script is to convert from cDNA to protein using BioPython '
 import argparse
 import re
 from Bio.Seq import Seq
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
-
-# to run script: ./dna_to_peptide.py -f /projects/bgmp/tonib/bioinfo/LANL/raw_data/IMGT/cumulative_fasta/human_mouse.txt -o /projects/bgmp/tonib/bioinfo/LANL/scripts/dna_to_peptide/peptide.txt
-
 
 def get_args():
     parser = argparse.ArgumentParser(description="A program to convert cDNA sequences into protein sequences by searching for codons and translating into amino acids")
