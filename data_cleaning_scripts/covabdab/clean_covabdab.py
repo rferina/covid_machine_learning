@@ -1,31 +1,41 @@
 #!/usr/bin/env python
 """
 Data cleaner & splitter for CoV-AbDab dataset.
+Author: Kaetlyn Gibson
 """
 import os
 import random
 import pandas as pd
 
-def dataLoader(CSV):
-    """== DATA LOADING =="""
+def dataLoader(CSV: str):
+    """
+    Given the CoV-AbDab dataset .csv, loads in the
+    data into a pandas dataframe and returns the
+    dataframe.
+    """
     # == Load in data, only columns that we want ==
     # load data into pandas dataframe
     df = pd.read_csv(CSV)
     # acquire only columns that we want from the data
     df = df[['Name', 'Ab or Nb', 'Binds to','Protein + Epitope', 'Origin', 'VHorVHH', 'VL',
-                               'Heavy V Gene', 'Heavy J Gene', 'Light V Gene', 'Light J Gene', 'CDRH3',
-                               'CDRL3', 'Structures', 'ABB Homology Model (if no structure)']]
+             'Heavy V Gene', 'Heavy J Gene', 'Light V Gene', 'Light J Gene', 'CDRH3',
+             'CDRL3', 'Structures', 'ABB Homology Model (if no structure)']]
     print(f"[PRECLEANING]")
     print(f"\t> Number of entries before cleaning: {len(df)}")
     print(f"\t> done")
     return df
 
 
-def dataCleaner(df, STANDARD_BT, TYPE):
-    """== DATA CLEANING =="""
+def dataCleaner(df, STANDARD_BT: str, TYPE: str):
+    """
+    Given the CoV-AbDab dataframe, 'Binds to' column standardizations,
+    and type of 'Labels' column, returns the cleaned dataframe.
+    'Binds to' column standardizations were made by printing out the
+    unique values of the 'Binds to' column, and then manually fixing these values.
+    """
     # == Isolate SARS-CoV1, SARS-CoV2, MERS-CoV, entries from 'Binds to' column ==
     print(f"[CLEANING 'Binds to']")
-    binds_to = df['Binds to'].unique()
+    binds_to = df['Binds to'].unique() # print this out so see unique values in column
     keep_cov, cov_var = [], []
     for entry in binds_to:
         # convert to upper in case of typos
@@ -138,10 +148,6 @@ def dataCleaner(df, STANDARD_BT, TYPE):
     df = df.assign(**{'Binds to':unweak_df})
     df.insert(3, 'Binds to (weak)', weak_df)
     df.insert(4, 'Labels', label_df)
-    # df.insert(4, 'MERS-CoV', merscov_df)
-    # df.insert(5, 'SARS-CoV1', sarscov1_df)
-    # df.insert(6, 'SARS-CoV2', sarscov2_df)
-    # df.insert(7, 'Labels', label_df)
     print(f"\t> done")
 
     # == Isolate non human origin entries from 'Origin'column ==
@@ -203,7 +209,15 @@ def dataCleaner(df, STANDARD_BT, TYPE):
 
 
 def dataSplit (df):
-    """==RANDOMLY SUBSET THE DATA=="""
+    """
+    Given a dataframe, randomly subsamples the SARS-CoV2 data
+    in a 2:1 ratio. Keeps the entirety of the non SARS-CoV2 data.
+
+    Note!
+    While this successfully splits the data, the results of the
+    classification machine learning model suggests that alternative
+    methods should be explored to mitigate 'Labels' imbalance.    
+    """
     # == Separate indexes of dataset ==
     # loop through indexes + 'Labels' column
     # append the index based on the column values
@@ -218,7 +232,7 @@ def dataSplit (df):
 
     # == Randomly subsample dataset into new dataframe ==
     subset = []
-    # add all non sars-cov2 entries 
+    # add non sars-cov2 entries 
     subset += set_dict['0']
     # add downsampled sars-cov2 entries
     subset += random.sample(set_dict['1'], len(set_dict['0'])*2) # 2:1 ratio
@@ -230,8 +244,12 @@ def dataSplit (df):
     return subset_df
 
 
-def dataStats (df, TYPE):
-    """== STATS =="""
+def dataStats (df, TYPE: str) -> None:
+    """
+    Given a dataframe and the type of 'Labels' column,
+    prints out the distribution of SARS-CoV2 and non SARS-CoV2 
+    entries between human and mouse.
+    """
     # == Count ==
     set_dict = {}
     for index, label, species in zip(df.index, df['Labels'], df['Origin']):
@@ -282,12 +300,11 @@ if __name__=='__main__':
     # == File pathing ==
     ROOT_DIR = os.path.join(os.path.dirname(__file__), '..')
     ROOT_DIR = os.path.abspath(ROOT_DIR)
-    DATA_DIR = os.path.join(ROOT_DIR, 'raw_data/covabdab')
-    CSV = os.path.join(DATA_DIR, 'CoV-AbDab_201222.csv')
+    #DATA_DIR = os.path.join(ROOT_DIR, 'raw_data/covabdab') # for Talapas
+    DATA_DIR = os.path.join(ROOT_DIR, 'lanl/Data/covabdab') # for remote
+    CSV = os.path.join(DATA_DIR, 'CoV-AbDab_031022.csv')
     STANDARD_BT = os.path.join(DATA_DIR, 'standardized_bindsto.tsv')
     SPLIT_DIR = os.path.join(DATA_DIR, 'split')
-    
-    # == Change these if you want to change the output .csv == 
     TYPE = 'binary' # 'regular'/'binary'/'trinary'
     SPLIT = False # True = yes subset the data
 
@@ -299,7 +316,7 @@ if __name__=='__main__':
     if SPLIT:
         subset_df = dataSplit(clean_df)
         if TYPE == 'binary':
-            subset_df.to_csv(os.path.join(SPLIT_DIR, 'covabdab_split_binary_updated.csv'), index=False)
+            subset_df.to_csv(os.path.join(SPLIT_DIR, 'covabdab_split_binary.csv'), index=False)
         elif TYPE == 'trinary':
             subset_df.to_csv(os.path.join(SPLIT_DIR, 'covabdab_split_trinary.csv'), index=False)
         else:
@@ -307,7 +324,7 @@ if __name__=='__main__':
         dataStats(subset_df, TYPE)
     else:
         if TYPE == 'binary':
-            clean_df.to_csv(os.path.join(DATA_DIR, 'covabdab_clean_binary_updated.csv'), index=False)
+            clean_df.to_csv(os.path.join(DATA_DIR, 'covabdab_clean_binary.csv'), index=False)
         elif TYPE == 'trinary':
             clean_df.to_csv(os.path.join(DATA_DIR, 'covabdab_clean_trinary.csv'), index=False)
         else:
