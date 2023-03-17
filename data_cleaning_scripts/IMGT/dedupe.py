@@ -9,9 +9,6 @@ from Bio.Seq import Seq
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 
-# to run script: ./dedupe.py -f /projects/bgmp/tonib/bioinfo/LANL/scripts/dna_to_peptide/peptide5.txt -o /projects/bgmp/tonib/bioinfo/LANL/scripts/dna_to_peptide/deduped.txt
-
-
 def get_args():
     parser = argparse.ArgumentParser(description="A program to convert cDNA sequences into protein sequences by searching for codons and translating into amino acids")
     parser.add_argument("-f", "--file", help="designates absolute file path to fasta file", required=True)
