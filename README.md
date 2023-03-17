@@ -77,6 +77,7 @@ These graphs show the mean squared error before and after fine-tuning the hyperp
 
 
 ![2_layer](https://user-images.githubusercontent.com/76976889/225944269-5aefbb90-43da-4a6b-83b8-ac7cdfd50753.png)
+
 Preliminary results were also created with the model with $2$ LSTM layers. The mean squared error was higher starting at $10$, and more epochs were needed ($600$) to have the mean squared error approach $0$.
 
 
