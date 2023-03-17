@@ -88,7 +88,9 @@ This data comes from a public database, and required cleaning and filtering to b
 
 
 ## Classification Model
-Talk about data bias, cross-reactivity
+![merged_updated](https://user-images.githubusercontent.com/107630590/226062941-e65fc4d1-ec89-408c-8b56-69aef3f9dc57.png)
+
+![e200_redux](https://user-images.githubusercontent.com/107630590/226063667-51345c12-8d68-4ef3-9840-250bdab4f2df.png)
 
 
 ## Regression Model
