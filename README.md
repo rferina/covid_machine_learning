@@ -60,6 +60,9 @@ This data comes from a public database, and required cleaning and filtering to b
 
 
 **Sab-Dab:**
+The Structural Antibody Database (SAbDab) (https://opig.stats.ox.ac.uk/webapps/newsabdab/sabdab/) is an online database built by the Oxford Protein Informatics Group, which contains all the antibody structures available in the Protein Data bank (PDB). This database updates weekly and collects, curates, and presents antibody structural data in a consistent fashion for bulk analysis and individual inspection. Each structure in the dataset is annotated with several features, including experimental details, antibody structure, curated affinity data, and sequence annotation. The database can be used to inspect individual structures, create and download datasets for analysis, search for structures with similar sequences, and monitor the known structural repertoire of antibodies. 
+
+The database was filtered to only include antibodies with homo sapiens as the structure organism and coronavirus as the target antigen species. From this filtered list, the columns were examined and cleaned for any inconsistencies and entries containing errors. The coronavirus entry names were standardized and separated into groups containing coronavirus, coronavirus 2, and bat coronavirus. The dataset is heavily biased towards coronavirus 2 but contains additional information for heavy and light chain species and identifiers, as well as limited affinity data. This cleaned dataset provides 1220 antibody entries and can hopefully be used in the future in combination with other datasets to test antibody structural predictions. 
 
 
 ## Database collection schemas
