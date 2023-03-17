@@ -1,6 +1,12 @@
 # Machine Learning Approach to a Novel Curated Covid-19 Antibody Database
 ### By Toni Brooks, Matt Esqueda, Rachel Ferina, and Kaetlyn Gibson
 
+
+## Overview
+We cleaned four publicly available Covid-19 antibody-antigen datasets to curate a MongoDB database for machine learning.
+We developed a binary classification machine learning model to identify if an antibody is SARS-CoV-2 or not, as well as a regression machine learning model to predict antigen binding affinity.
+
+
 ## Terms to Know
 
 | Term          | Definition                                                   |
@@ -30,11 +36,6 @@
 | ...           | ...                                                          |
 
 
-## Overview
-We cleaned four publicly available Covid-19 antibody-antigen datasets to curate a MongoDB database for machine learning.
-We developed a binary classification machine learning model to identify if an antibody is SARS-CoV-2 or not, as well as a regression machine learning model to predict antigen binding affinity.
-
-
 ## Database Cleaning
 
 ![database_numbers](database_numbers.png)
@@ -50,17 +51,24 @@ The AlphaSeq dataset contains three replicates for each assay. However, includin
 
 
 **CoV-AbDab:**
-The data in the [CoV-AbDab](https://opig.stats.ox.ac.uk/webapps/covabdab/) database references both papers and patents to collect antibodies and nanobodies that are known to bind to at least one of SARS-CoV-2, SARS-CoV-1, MERS-CoV, and/or other beta-coronaviruses. Metadata such as antibody/nanobody, full variable domain sequence, origin species, structure, the binding coronavirus, and protein/epitope information are included in this database.
+The Coronavirus Antibody Database, or [CoV-AbDab](https://opig.stats.ox.ac.uk/webapps/covabdab/), was created and is currently maintained by the Oxford Protein Informatics Group (Dept. of Statistics, University of Oxford). The data in the CoV-AbDab database references both papers and patents to collect antibodies and nanobodies that are known to bind to at least one of SARS-CoV-2, SARS-CoV-1, MERS-CoV, and/or other beta-coronaviruses. Metadata such as antibody/nanobody, full variable domain sequence, origin species, structure, the binding coronavirus, and protein/epitope information are included in this database.
 
 
-This data comes from a public database, and required cleaning and filtering to be most usable for the classification machine learning model. Columns of the original database were selected down to 15, keeping essential information such as sequence data of the heavy and light chain variable and complementary regions, the coronavirus that the antibody/nanobody binds to, and the origin species. SARS-CoV1, SARS-CoV2, and MERS-CoV coronaviruses were isolated, and human and mouse species were isolated as well. Data from multiple columns were standardized to fix entry errors or simplify entries. Empty and duplicate sequences were deleted. A labeling column was added based on whether or not the binding coronavirus was SARS-CoV-2 or not for usage in the classification model.
+This data comes from a public database, and required cleaning and filtering to be most usable for the classification machine learning model. Columns of the original database were selected down to 15, keeping essential information such as sequence data of the heavy and light chain variable and complementary regions, the coronavirus that the antibody/nanobody binds to, and the origin species. SARS-CoV-1, SARS-CoV-2, and MERS-CoV coronaviruses were isolated, and human and mouse species were isolated as well. Data from multiple columns were standardized to fix entry errors or simplify entries. Empty and duplicate sequences were deleted. A labeling column was added based on whether or not the binding coronavirus was SARS-CoV-2 or not for usage in the classification model. It is of note that labeling for entries designated as SARS-CoV-2 are not necessarily antibodies/nanobodies that bind exclusively to the SARS-CoV-2 coronavirus, but may also bind to SARS-CoV-1 and/or MERS-CoV coronaviruses. Furthermore, entries that are non-SARS-CoV-2 may bind to SARS-CoV-1 and/or MERS-CoV coronaviruses.
+
+
+Final number of usable records after cleaning was 9,018, down from 11,868 total records. It is also of note that this data is heavily biased towards SARS-CoV-2 records (8,789) compared to non-SARS-CoV-2 records (229), which will be talked about in more depth later in the classification model section.
 
 
 **IGMT:**
+[IMGT](https://www.imgt.org/), or the International ImMunoGeneTics information system, was founded in 1989 by Marie-Paule Lefranc and is the main global resource for immunogenetics and immunoinformatics. It focuses on immunoglobulins, T cell receptors, major histocompatibility molecules, and immune system-related proteins in both vertebrates and invertebrates. With IMGT-ONTOLOGY ideas and IMGT Scientific chart rules, IMGT provides simple access to immunogenetics data such as sequences, genomes, and structures. The platform, which works with the EBI, DDBJ, and NCBI, includes databases for sequences, genomes, structures, and monoclonal antibodies.
+
+
+Many steps were required in the data cleaning process for the IMGT database. The first dataset was a FASTA file that included the Accession ID, species, molecular type, definition, CDS feature, and sequence. To begin, a script was written utilizing BioPython to convert cDNA to peptides. The dataset was then cleaned by deleting unnecessary species, T-cell and B-cell cell types using another script. A script was also written to tally the number of human and mouse sequences while allowing for spelling variances. Finally, using BioPython and PANDAS, a script was written to eliminate duplicates from the output file of the cDNA to protein script. Ultimately, using a one-line FASTA function and bash instructions, a script was created to convert the FASTA file format csv. The data cleaning method was successful in eliminating extraneous information and duplicates, and the outcome was a csv file can be utilized for additional analysis.
 
 
 **Sab-Dab:**
-The Structural Antibody Database (SAbDab) (https://opig.stats.ox.ac.uk/webapps/newsabdab/sabdab/) is an online database built by the Oxford Protein Informatics Group, which contains all the antibody structures available in the Protein Data bank (PDB). This database updates weekly and collects, curates, and presents antibody structural data in a consistent fashion for bulk analysis and individual inspection. Each structure in the dataset is annotated with several features, including experimental details, antibody structure, curated affinity data, and sequence annotation. The database can be used to inspect individual structures, create and download datasets for analysis, search for structures with similar sequences, and monitor the known structural repertoire of antibodies. 
+The Structural Antibody Database ([SAbDab](https://opig.stats.ox.ac.uk/webapps/newsabdab/sabdab/)) is an online database built by the Oxford Protein Informatics Group, which contains all the antibody structures available in the Protein Data bank (PDB). This database updates weekly and collects, curates, and presents antibody structural data in a consistent fashion for bulk analysis and individual inspection. Each structure in the dataset is annotated with several features, including experimental details, antibody structure, curated affinity data, and sequence annotation. The database can be used to inspect individual structures, create and download datasets for analysis, search for structures with similar sequences, and monitor the known structural repertoire of antibodies. 
 
 The database was filtered to only include antibodies with homo sapiens as the structure organism and coronavirus as the target antigen species. From this filtered list, the columns were examined and cleaned for any inconsistencies and entries containing errors. The coronavirus entry names were standardized and separated into groups containing coronavirus, coronavirus 2, and bat coronavirus. The dataset is heavily biased towards coronavirus 2 but contains additional information for heavy and light chain species and identifiers, as well as limited affinity data. This cleaned dataset provides 1220 antibody entries and can hopefully be used in the future in combination with other datasets to test antibody structural predictions. 
 
@@ -116,7 +124,7 @@ Due to the AlphaSeq dataset being the only dataset with quantitative data, and b
 
 
 The data was split into 80% training and 20% testing data.
-TAPES embedding was used to embed the sequences. 
+TAPE embedding was used to embed the sequences. TAPE consists of a set of semi-supervised learning tasks spread across different domains of protein biology. These pre-trained protein embeddings have proven useful for various protein-related machine learning tasks and are expected to improve results over a simple one-hot embedding.
 
 
 Preliminary results were generated with a test file of 1000 lines, due to runtime issues when attempting to run on the full file. The hyperparameters such as number of epochs, batch size, and learning rate were fine-tuned in order to increase accuracy of the model (which is indicated by a low mean squared error). 
