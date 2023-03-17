@@ -91,9 +91,24 @@ The database was filtered to only include antibodies with homo sapiens as the st
 
 
 ## Classification Model
+Classification models are supervised machine learning algorithms that attempt to classify input data into specified classes or categories. These models learn from labeled training data, identifying patterns and correlations within the data, and then applying the learned patterns to fresh, previously unseen data to predict the associated class. The model made use of a long short-term memory layer (LSTM), a type of recurrent neural network capable of learning long-term dependencies. The LSTM architecture creates an additional module in the neural network that can process data sequentially and learn when to remember or forget important information.  
+
+
+The goal of the classification model was to accurately predict SARS-CoV antibody classes. We initially used the first 1000 lines of the CovAbDab.csv file to run most of the analysis. However, we observed a class bias with SARS-CoV-2 antibodies dominating non-SARS-CoV-2 antibodies. To fix this, we attempted to downsample SARS-CoV2 data in Python such that we had twice as much non-SARS-CoV2 data as we had SARS-CoV2 data, resulting in numerous datasets for our machine learning model. Nonetheless, the outcomes were unsatisfactory.
+
+
+Preliminary results were obtained utilizing one-hot embedding. Even with ten epochs, the testing data loss remained considerable in comparison to the training data. The model still showed evidence of overfitting after modifying parameters such as batch size, learning rate, and epochs, since the testing data accuracy did not match the training data.
+
 ![merged_updated](https://user-images.githubusercontent.com/107630590/226062941-e65fc4d1-ec89-408c-8b56-69aef3f9dc57.png)
 
+
+We also ran the model on the full file, but the findings still had the same overfitting issues as the smaller test files.
+
+
 ![e200_redux](https://user-images.githubusercontent.com/107630590/226063667-51345c12-8d68-4ef3-9840-250bdab4f2df.png)
+
+
+We intend to investigate various class imbalance solutions in the future, possibly using R packages or SMOTE, and to run the model on the entire dataset. To boost our outcomes, we will also investigate using Tasks Assessing Protein Embeddings (TAPE) as well as explore other deep learning models such as Transformers which benefit from self-attention.
 
 
 ## Regression Model
