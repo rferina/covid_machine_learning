@@ -1,6 +1,34 @@
 # Machine Learning Approach to a Novel Curated Covid-19 Antibody Database
 ### By Toni Brooks, Matt Esqueda, Rachel Ferina, and Kaetlyn Gibson
 
+## Terms to Know
+
+| Term          | Definition                                                   |
+|---------------|--------------------------------------------------------------|
+| Binary        | A base-2 numeral system consisting of only two digits, 0 and 1, used to represent data in digital computing and communication systems. |
+| MongoDB       | A popular NoSQL database system, designed for scalability and flexibility, storing data in a JSON-like format called BSON (Binary JSON). |
+| Epoch         | A single pass through the entire training dataset during model training. |
+| Binding Affinity | A measure of the strength of interaction between a receptor (e.g., antibody) and its target (e.g., antigen). |
+| Antibody      | A protein produced by the immune system that binds to specific foreign substances (antigens) to neutralize or remove them. |
+| Antigen       | A foreign substance (e.g., virus, bacteria, or protein) that triggers an immune response, particularly the production of antibodies. |
+| Light chain   | One of the two types of polypeptide chains in an antibody molecule, smaller in size compared to the heavy chain. |
+| Heavy chain   | One of the two types of polypeptide chains in an antibody molecule, larger in size compared to the light chain. |
+| Overfit       | A situation where a model learns the training data too well, including noise, leading to poor generalization on unseen data. |
+| Kmerization   | A technique to divide a sequence into overlapping sub-sequences (k-mers) of length k for further analysis. |
+| Token         | A unit of text or sequence, representing a single character, word, or subsequence used in natural language or sequence processing. |
+| Schema        | A blueprint that defines the structure, relationships, and constraints of data in a database or data model. |
+| Training Data | A labeled dataset used to train a machine learning model to learn patterns and relationships in the data. |
+| Testing Data  | An unlabeled dataset used to evaluate the performance of a trained machine learning model on unseen data. |
+| Embedding     | A technique to convert discrete tokens or objects into continuous vectors, often used to represent words, sequences, or items in a lower-dimensional space. |
+| Accuracy      | A metric that measures the proportion of correct predictions made by a classification model relative to the total number of predictions. |
+| LSTM          | Long Short-Term Memory, a type of recurrent neural network architecture designed to learn and remember long-range dependencies in sequential data. |
+| TAPES         | Tasks Assessing Protein Embeddings, a collection of pre-trained protein embeddings used for various protein-related machine learning tasks. |
+| One-hot Embeddings | A binary representation of categorical variables, where each category is represented by a vector with a single '1' and the rest '0's. |
+| Loss          | A measure of the difference between the predicted output and the actual output, used to evaluate and optimize a machine learning model. |
+| Batch Size    | The number of samples processed simultaneously during model training, affecting the speed and memory requirements of the training process. |
+| Learning Rate | A hyperparameter that controls the step size of weight updates during model training, influencing the convergence and accuracy of the model. |
+| ...           | ...                                                          |
+
 
 ## Overview
 We cleaned four publicly available Covid-19 antibody-antigen datasets to curate a MongoDB database for machine learning.
