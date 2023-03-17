@@ -9,14 +9,13 @@ We developed a binary classification machine learning model to identify if an an
 
 ## Database Cleaning
 **AlphaSeq:**
-The AlphaSeq data was generated from in silico experiments, with Alphaseq assays used to collect the antibodies targeted against SARS-CoV-2. 
-Alphaseq assays measure protein-protein interactions via the frequency of barcode pairs after next generation sequencing, with a higher frequency indicating stronger protein-protein interactions. The barcodes along with controls are used to estimate binding affinity, which is a numerical representation of how likely an antibody and antigen are to interact.
+The [AlphaSeq](https://www.nature.com/articles/s41597-022-01779-4) data was generated from in silico experiments, with Alphaseq assays used to collect the antibodies targeted against SARS-CoV-2. Alphaseq assays measure protein-protein interactions via the frequency of barcode pairs after next generation sequencing, with a higher frequency indicating stronger protein-protein interactions. The barcodes along with controls are used to estimate binding affinity, which is a numerical representation of how likely an antibody and antigen are to interact.
 
 
 This dataset contains single chain fragment variable antibodies, or scFV, which are recombinant antibodies that contain one light chain and one heavy chain connected by a linker peptide. However this is a significant structural difference, and these single chain antibodies mean this data cannot be combined with the other datasets for machine learning.
 
 
-The AlphaSeq dataset contains three replicates for each assay. However, including replicates could result in overfitting of the machine learning model. Before removing the replicates, their binding affinities were averaged before removal in order to have the best representation for the machine learning model to learn from. Only the first entry of the three replicates was kept. Rows with missing values were also excluded. After cleaning, there were $87,807$ usable records of the $1,259,701$ total records.
+The AlphaSeq dataset contains three replicates for each assay. However, including replicates could result in overfitting of the machine learning model. Before removing the replicates, their binding affinities were averaged before removal in order to have the best representation for the machine learning model to learn from. Only the first entry of the three replicates was kept. Rows with missing values were also excluded. After cleaning, there were 87,807 usable records of the 1,259,701 total records.
 
 
 **CoV-AbDab:**
@@ -62,10 +61,10 @@ Talk about data bias, cross-reactivity
 
 
 ## Regression Model
-Due to the AlphaSeq dataset being the only dataset with quantitative data, and because of the single chain antibody structural difference, only the AlphaSeq dataset was used for the regression model. The AlphaSeq dataset alone is sufficient for a machine learning model, with $87,807$ rows.
+Due to the AlphaSeq dataset being the only dataset with quantitative data, and because of the single chain antibody structural difference, only the AlphaSeq dataset was used for the regression model. The AlphaSeq dataset alone is sufficient for a machine learning model, with 87,807 rows.
 
 
-The data was split into $80%$ training and $20%$ testing data.
+The data was split into 80% training and 20% testing data.
 TAPES embedding was used to embed the sequences. 
 
 
@@ -73,12 +72,12 @@ Preliminary results were generated with a test file of 1000 lines, due to runtim
 
 
 ![alphaseq_graphs](https://user-images.githubusercontent.com/76976889/225943730-9ee469e4-99cd-4da5-ade4-f4ef3750be7f.png)
-These graphs show the mean squared error before and after fine-tuning the hyperparameters. Fine-tuning resulted in a batch size of $100$ and a learning rate of $0.0001$. As the number of epochs increases, the MSE approaches $0$, indicating high accuracy. The testing dataset has higher accuracy than the training dataset, which suggests that the model is not overfit to the training data for these preliminary results. 
+These graphs show the mean squared error before and after fine-tuning the hyperparameters. Fine-tuning resulted in a batch size of 100 and a learning rate of 0.0001. As the number of epochs increases, the MSE approaches $0$, indicating high accuracy. The testing dataset has higher accuracy than the training dataset, which suggests that the model is not overfit to the training data for these preliminary results. 
 
 
 ![2_layer](https://user-images.githubusercontent.com/76976889/225944269-5aefbb90-43da-4a6b-83b8-ac7cdfd50753.png)
 
-Preliminary results were also created with the model with $2$ LSTM layers. The mean squared error was higher starting at $10$, and more epochs were needed ($600$) to have the mean squared error approach $0$.
+Preliminary results were also created with the model with 2 LSTM layers. The mean squared error was higher starting at 10, and more epochs were needed (600) to have the mean squared error approach 0.
 
 
 To attempt to improve the runtime, the sequences were kmerized and embedded with TAPES, generating a json file. The json file serves as a reference file with the embeddings, which should improve the model runtime. However, there was unfortunately not enough time to fully implement the kmerized embeddings to run the model on the full AlphaSeq dataset. So far, the kmerized file was successfully loaded into the model along with the AlphaSeq csv. However, associating the kmerized sequences with the csv has proven to be challenging. We also discovered the kmers are generated every two nucleotides.
