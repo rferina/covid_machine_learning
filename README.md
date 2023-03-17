@@ -72,11 +72,11 @@ TAPES embedding was used to embed the sequences.
 Preliminary results were generated with a test file of 1000 lines, due to runtime issues when attempting to run on the full file. The hyperparameters such as number of epochs, batch size, and learning rate were fine-tuned in order to increase accuracy of the model (which is indicated by a low mean squared error). 
 
 
-![alphaseq_graphs]()
+![alphaseq_graphs](https://user-images.githubusercontent.com/76976889/225943730-9ee469e4-99cd-4da5-ade4-f4ef3750be7f.png)
 These graphs show the mean squared error before and after fine-tuning the hyperparameters. Fine-tuning resulted in a batch size of $100$ and a learning rate of $0.0001$. As the number of epochs increases, the MSE approaches $0$, indicating high accuracy. The testing dataset has higher accuracy than the training dataset, which suggests that the model is not overfit to the training data for these preliminary results. 
 
 
-![alphaseq_2_layers]()
+![2_layer](https://user-images.githubusercontent.com/76976889/225944269-5aefbb90-43da-4a6b-83b8-ac7cdfd50753.png)
 Preliminary results were also created with the model with $2$ LSTM layers. The mean squared error was higher starting at $10$, and more epochs were needed ($600$) to have the mean squared error approach $0$.
 
 
