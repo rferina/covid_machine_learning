@@ -36,6 +36,9 @@ We developed a binary classification machine learning model to identify if an an
 
 
 ## Database Cleaning
+
+![database_numbers](database_numbers.png)
+
 **AlphaSeq:**
 The [AlphaSeq](https://www.nature.com/articles/s41597-022-01779-4) data was generated from in silico experiments, with Alphaseq assays used to collect the antibodies targeted against SARS-CoV-2. Alphaseq assays measure protein-protein interactions via the frequency of barcode pairs after next generation sequencing, with a higher frequency indicating stronger protein-protein interactions. The barcodes along with controls are used to estimate binding affinity, which is a numerical representation of how likely an antibody and antigen are to interact.
 
