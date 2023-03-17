@@ -25,122 +25,19 @@ import ast
 
 # conda activate pytorch_dev2
 
-########################json loading that works###################################
-# with open("tapes_kmer_6_emb_alphaseq_4.json", 'r') as f:
-#      s = f.read()
-#      correct_format = re.sub(", *\n *}", "}", s)
-#      correct_format = re.sub("\"", "\"", correct_format)
-#      correct_format = re.sub("'", "\"", correct_format)
-#      data_json = json.loads(correct_format)
-
-# print(data_json[10])
-
-# actually prints
-# with open("tapes_kmer_6_emb_alphaseq_4.json") as f:
-#     for i in range(0, 15):
-#         print(f.readline(), end = '')
-
-# index out of range
-# with open("tapes_kmer_6_emb_alphaseq_4.json") as f:
-    # # line = f.readline()
-    # # for line in range(0, 15):
-    # labels = []
-    # seqs = []
-    # for line in f.readline():
-    #     next(f) #skip header
-    #     line = line.split(':')
-    #     print(line)
-    #     labels.append(line[0])
-    #     # seqs.append(line[1])
-    # print(labels, end = '')
-
-## trying to fix index error; AttributeError: 'str' object has no attribute 'keys'
-# with open("tapes_kmer_6_emb_alphaseq_4.json") as jsonFile:
-#     data = json.load(jsonFile)
-    # jsonData = data["EVQLVE"]
-    # for x in data:
-    #     keys = x.keys()
-    #     print(keys)
-    #     values = x.values()
-    #     print(values)
-
-    # prints all of data, not just keys
-#     my_dict = ast.literal_eval(data)
-# print(type(my_dict))
-# print('yay')
-# print(my_dict['EVQLVE'])
-# print(my_dict.keys())
-
-    # TypeError: can only concatenate str (not "_io.TextIOWrapper") to str
-    # exec("tempvar = " + jsonFile)
-    # jsonFile = json.dumps(jsonFile)
-    # myJson = json.loads(jsonFile)
-
-    # print(str(tempvar['EVQLVE']))
-    # print(str(myJson))
-
-# AttributeError: 'str' object has no attribute 'values'
-# with open("tapes_kmer_6_emb_alphaseq_4.json") as f:
-#     data = json.dumps(f.read())
-
-#     rows = json.dumps(data)
-#     r=zip(*rows.values())
-#     print('yay')
-
-
-# # WORKS 
-# seqs = []
-# labels = []
-# test_seq = []
-# with open("tapes_kmer_6_emb_alphaseq_4.json") as f:
-#     data = json.loads(f.read())
-#     for ky in data.keys():
-#         test_seq.append(ky)
-
-#     # seqs.append(data.keys())
-#     # labels.append(data.values())
-
-# print(len(test_seq))
-# print(test_seq)
-# print('seqs', len(seqs))
-# print(list(seqs))
-# print('labels', list(labels))
-# print('keys', len(data.keys()))
-# print('keys list', list(data.keys()))
-
-# print('vals', list(data.values()))
-################################################
-# original class, led to keyerror 913
-# class LoadData:
-#     """
-#     Loads in kmerized sequences.
-#     """
-#     def __init__(self, jsonfilename):
-#         self.jsonfilename = jsonfilename
-
-#     def loading_json(self):
-#         """Read in json file, return data"""
-
-#         with open(self.jsonfilename, 'r') as f:
-#             s = f.read()
-#             correct_format = re.sub(", *\n *}", "}", s)
-#             correct_format = re.sub("\"", "\"", correct_format)
-#             correct_format = re.sub("'", "\"", correct_format)
-#             data_json = json.loads(correct_format)
-#         return data_json
-
 
 class LoadData:
     """
     Loads in kmerized sequences.
     """
-    def __init__(self, jsonfilename):
+    def __init__(self, jsonfilename, csv_file):
         self.jsonfilename = jsonfilename
+        self.csv_file = csv_file
 
         def loading_json():
             """Read in json file, return data"""
 
-            labels = []
+            # labels = []
             # log10_ka = []
             seqs = []
             try:
@@ -151,27 +48,35 @@ class LoadData:
                     # correct_format = re.sub("'", "\"", correct_format)
                     # data_json = json.loads(correct_format)
                     data_json = json.loads(s)
-                    # seqs.append(data_json.keys())
-                    # labels.append(data_json.values())
-                    for label in data_json.keys():
-                        labels.append(label)
+                    # for label in data_json.keys():
+                    #     labels.append(label)
 
                     for seq in data_json.values():
                         seqs.append(seq)
 
-                    # for line in data_json:
-                    #     line = line.split(':')
-                    #     labels.append(line[0])
-                    #     seqs.append(line[1])
-                    #     log10_ka.append(np.float32(line[14]))
             except FileNotFoundError:
                 print(f'File not found error: {self.jsonfilename}.', file=sys.stderr)
                 sys.exit(1)
-            # return labels, seqs
-            return labels, seqs, log10_ka
+            return seqs
+            
+        def loading_csv():
+            labels = []
+            log10_ka = []
+            try:
+                with open(csv_file, 'r') as fh:
+                    next(fh) #skip header
+                    for line in fh.readlines():
+                        line = line.split(',')
+                        labels.append(line[0])
+                        log10_ka.append(np.float32(line[14]))
+                        
+            except FileNotFoundError:
+                print(f'File not found error: {csv_file}.', file=sys.stderr)
+                sys.exit(1)
+            return labels, log10_ka
 
-        self.labels, self.seqs, self.log10_ka = loading_json()
-        # self.labels, self.seqs = loading_json()
+        self.labels, self.log10_ka = loading_csv()
+        self.seqs = loading_json()
         self._longest_seq = len(max(self.seqs,key=len))
 
 
@@ -181,9 +86,9 @@ class LoadData:
     def __getitem__(self, idx):
         try:
             # features = self.transformer.embed(self._longest_seq,self.seqs[idx])
-            features = self.seqs[idx]
+            features = self._longest_seq,self.seqs[idx]
 
-            return self.labels[idx], features
+            return self.labels[idx], features, self.log10_ka[idx]
             # return self.labels[idx], features, self.log10_ka[idx]
 
         except IndexError:
@@ -282,7 +187,7 @@ def run_lstm(model: BLSTM,
 
         train_count = 0
         # for batch, (label, feature, target) in enumerate(train_loader):
-        for batch, label, feature, target in train_loader:
+        for label, feature, target in train_loader:
             train_count += 0
             optimizer.zero_grad()
             feature, target = feature.to(device), target.to(device)
@@ -295,7 +200,7 @@ def run_lstm(model: BLSTM,
 
         # for batch, (label, feature, target) in enumerate(test_loader):
         test_count = 0
-        for batch, label, feature, target in test_loader:
+        for label, feature, target in test_loader:
             test_count += 1
             feature, target = feature.to(device), target.to(device)
             with torch.no_grad():
@@ -386,6 +291,8 @@ if __name__=='__main__':
 
     KD_JSON = os.path.join(DATA_DIR, 'tapes_kmer_6_emb_alphaseq_4.json')
     # KD_CSV = os.path.join(DATA_DIR, 'alpha_seq_test.csv')
+    KD_CSV = os.path.join(DATA_DIR, 'clean_avg_alpha_seq.csv')
+
 
     # Run setup
     # DEVICE = 'cuda' if torch.cuda.is_available else 'cpu'
@@ -400,22 +307,13 @@ if __name__=='__main__':
     LSTM_BIDIRECTIONAL = True   # lstm_bidrectional
     FCN_HIDDEN_SIZE = 100        # fcn_hidden_size
     
-    # tape_transformer = Transformer('one_hot')
-    # tape_transformer = Transformer('tape')
-    # data_set = AlphpaSeqDataset(KD_CSV, tape_transformer)
-
-
     # data_obj = LoadData(KD_CSV)
     # data_set = data_obj.loading_json()
 
-    data_set = LoadData(KD_CSV, KD_JSON)
+    data_set = LoadData(KD_JSON, KD_CSV)
 
     print(len(data_set))
 
-    # print(len())
-
-    # print(data_set)
-    # print('yay')
     TRAIN_SIZE = int(0.8 * len(data_set))  # 80% goes to training
     
     TEST_SIZE = len(data_set) - TRAIN_SIZE
